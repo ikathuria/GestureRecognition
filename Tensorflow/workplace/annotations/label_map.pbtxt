@@ -18,3 +18,27 @@ item {
 	name:'five'
 	id:5
 }
+item { 
+	name:'leftIndicate'
+	id:6
+}
+item { 
+	name:'rightIndicate'
+	id:7
+}
+item { 
+	name:'namaste'
+	id:8
+}
+item { 
+	name:'adaab'
+	id:9
+}
+item { 
+	name:'salute'
+	id:10
+}
+item { 
+	name:'eating'
+	id:11
+}
