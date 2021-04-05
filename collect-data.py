@@ -42,7 +42,7 @@ for i in labels:
 
 
 # train/test mode
-mode = "train"
+mode = "test"
 directory = f"data1/{mode}/"
 minValue = 70
 
@@ -280,19 +280,19 @@ while True:
         cv2.imwrite(directory + "eight/" + str(count["eight"]) + ".jpg", roi)
     if interrupt & 0xFF == ord("9"):
         cv2.imwrite(directory + "nine/" + str(count["nine"]) + ".jpg", roi)
-    if interrupt & 0xFF == ord("U"):
+    if interrupt & 0xFF == ord("u"):
         cv2.imwrite(directory + "up/" + str(count["up"]) + ".jpg", roi)
-    if interrupt & 0xFF == ord("D"):
+    if interrupt & 0xFF == ord("d"):
         cv2.imwrite(directory + "down/" + str(count["down"]) + ".jpg", roi)
-    if interrupt & 0xFF == ord("L"):
+    if interrupt & 0xFF == ord("l"):
         cv2.imwrite(directory + "left/" + str(count["left"]) + ".jpg", roi)
-    if interrupt & 0xFF == ord("R"):
+    if interrupt & 0xFF == ord("r"):
         cv2.imwrite(directory + "right/" + str(count["right"]) + ".jpg", roi)
-    if interrupt & 0xFF == ord("F"):
+    if interrupt & 0xFF == ord("f"):
         cv2.imwrite(directory + "off/" + str(count["off"]) + ".jpg", roi)
-    if interrupt & 0xFF == ord("O"):
+    if interrupt & 0xFF == ord("o"):
         cv2.imwrite(directory + "on/" + str(count["on"]) + ".jpg", roi)
-    if interrupt & 0xFF == ord("K"):
+    if interrupt & 0xFF == ord("k"):
         cv2.imwrite(directory + "ok/" + str(count["ok"]) + ".jpg", roi)
 
 cap.release()
