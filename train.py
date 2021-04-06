@@ -20,7 +20,7 @@ test_datagen = ImageDataGenerator(rescale=1.0 / 255)
 training_set = train_datagen.flow_from_directory(
     "data2/train",
     target_size=(128, 128),
-    batch_size=10,
+    batch_size=4,
     color_mode="grayscale",
     class_mode="categorical",
 )
@@ -28,7 +28,7 @@ training_set = train_datagen.flow_from_directory(
 test_set = test_datagen.flow_from_directory(
     "data2/test",
     target_size=(128, 128),
-    batch_size=10,
+    batch_size=4,
     color_mode="grayscale",
     class_mode="categorical",
 )
