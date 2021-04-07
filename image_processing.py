@@ -46,7 +46,7 @@ class DataGenerator(keras.utils.Sequence):
     """Generates data for Keras."""
 
     def __init__(self, mode='train', ablation=None, gesture_cls=labels,
-                 batch_size=4, dim=(210, 280), n_channels=3, shuffle=True):
+                 batch_size=10, dim=(100, 100), n_channels=3, shuffle=True):
         """Initialise the data generator."""
         self.dim = dim
         self.batch_size = batch_size
@@ -106,18 +106,18 @@ class DataGenerator(keras.utils.Sequence):
         # Generate data
         for i, ID in enumerate(list_IDs_temp):
             # Store sample
-            img = cv2.imread(ID)
+            img = io.imread(ID)
             img = img/255
 
-            img = cv2.resize(img, (280, 210),
-                             interpolation=cv2.INTER_AREA)
+            # img = cv2.resize(img, (280, 210),
+            #                  interpolation=cv2.INTER_AREA)
 
-            # if img.shape[0] > 100 and img.shape[1] > 100:
-            #     h, w, _ = img.shape
-            #     img = img[int(h/2)-50:int(h/2)+50, int(w/2)-50:int(w/2)+50, :]
-            # else:
-            #     delete_rows.append(i)
-            #     continue
+            if img.shape[0] > 100 and img.shape[1] > 100:
+                h, w, _ = img.shape
+                img = img[int(h/2)-50:int(h/2)+50, int(w/2)-50:int(w/2)+50, :]
+            else:
+                delete_rows.append(i)
+                continue
 
             X[i, ] = img
 
