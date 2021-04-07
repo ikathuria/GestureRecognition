@@ -8,12 +8,6 @@ import os
 if not os.path.exists("data1"):
     os.makedirs("data1")
 
-if not os.path.exists("data1/train"):
-    os.makedirs("data1/train")
-
-if not os.path.exists("data1/test"):
-    os.makedirs("data1/test")
-
 labels = [
     "zero",
     "one",
@@ -35,15 +29,12 @@ labels = [
 ]
 
 for i in labels:
-    if not os.path.exists("data1/train/" + i):
-        os.makedirs("data1/train/" + i)
-    if not os.path.exists("data1/test/" + i):
-        os.makedirs("data1/test/" + i)
+    if not os.path.exists("data1/" + i):
+        os.makedirs("data1/" + i)
 
 
-# train/test mode
-mode = "test"
-directory = f"data1/{mode}/"
+# path
+directory = f"data1/"
 minValue = 70
 
 cap = cv2.VideoCapture(0)
