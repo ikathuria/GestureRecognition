@@ -61,7 +61,7 @@ model.summary()
 model.fit_generator(
     generator=training_generator,
     validation_data=validation_generator,
-    epochs=1
+    epochs=1000
 )
 
 # Step 4: Save the model
