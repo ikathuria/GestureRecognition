@@ -25,10 +25,9 @@ for folder in os.listdir(dataset_path):
     k = 0
     for img in os.listdir(gesture_path):
         image = cv2.imread(os.path.join(gesture_path, img))
-        height, width, channels = image.shape
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        gray_image = cv2.resize(gray_image, (int(0.7 * width), int(0.7 * height)))
+        gray_image = cv2.resize(gray_image, (100, 100))
         loaded_images.append(gray_image)
         k += 1
 
@@ -36,9 +35,9 @@ print("Total images in dataset:", len(loaded_images))  # 1700
 
 outputVectors = []
 
-for i in range(17):
+for i in range(18):
     for _ in range(0, k):
-        temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         temp[i] = 1
         outputVectors.append(temp)
 
@@ -71,7 +70,7 @@ print("Number of test images:", X_test.shape)
 # model.add(Dropout(0.20))
 # model.add(Dense(32, activation="relu"))
 # model.add(Dropout(0.20))
-# model.add(Dense(17, activation='softmax'))
+# model.add(Dense(18, activation='softmax'))
 
 # model.compile(optimizer="adam", loss="categorical_crossentropy",
 #               metrics=["accuracy"])
@@ -98,7 +97,7 @@ model.add(Dense(128, activation="relu"))  # fully connected
 model.add(Dropout(0.5))
 
 # softmax layer
-model.add(Dense(17, activation="softmax"))
+model.add(Dense(18, activation="softmax"))
 
 # model summary
 optimiser = Adam()
