@@ -3,30 +3,33 @@
 import cv2
 import numpy as np
 import os
+from image_processing import run_avg, segment
+
+accumWeight = 0.5
 
 # Create the directories
 if not os.path.exists("data1"):
     os.makedirs("data1")
 
 labels = [
-    "zero",
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "up",
-    "down",
-    "left",
-    "right",
-    "off",
-    "on",
-    "ok",
     "blank",
+    "down",
+    "eight",
+    "five",
+    "four",
+    "left",
+    "nine",
+    "off",
+    "ok",
+    "on",
+    "one",
+    "right",
+    "seven",
+    "six",
+    "three",
+    "two",
+    "up",
+    "zero",
 ]
 
 for i in labels:
@@ -40,11 +43,18 @@ minValue = 70
 
 cap = cv2.VideoCapture(0)
 interrupt = -1
+# initialize num of frames
+num_frames = 0
+# calibration indicator
+calibrated = False
 
 while True:
     ret, frame = cap.read()
     # simulating mirror image
     frame = cv2.flip(frame, 1)
+    
+    # clone the frame
+    clone = frame.copy()
 
     # getting count of existing images
     count = {
@@ -75,8 +85,8 @@ while True:
         (10, 70),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -84,8 +94,8 @@ while True:
         (10, 90),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -93,8 +103,8 @@ while True:
         (10, 110),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -102,8 +112,8 @@ while True:
         (10, 130),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -111,8 +121,8 @@ while True:
         (10, 150),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -120,8 +130,8 @@ while True:
         (10, 170),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -129,8 +139,8 @@ while True:
         (10, 190),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -138,8 +148,8 @@ while True:
         (10, 210),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -147,8 +157,8 @@ while True:
         (10, 230),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -156,8 +166,8 @@ while True:
         (10, 250),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -165,8 +175,8 @@ while True:
         (10, 270),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -174,8 +184,8 @@ while True:
         (10, 290),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -183,8 +193,8 @@ while True:
         (10, 310),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -192,8 +202,8 @@ while True:
         (10, 330),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -201,8 +211,8 @@ while True:
         (10, 350),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -210,8 +220,8 @@ while True:
         (10, 370),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -219,8 +229,8 @@ while True:
         (10, 390),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
     cv2.putText(
         frame,
@@ -228,35 +238,51 @@ while True:
         (10, 410),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (227, 132, 54),
-        1,
+        (0, 0, 0),
+        3,
     )
 
     # coordinates of the Region Of Interest (ROI)
-    x1 = int(0.5 * frame.shape[1])
-    y1 = 10
-    x2 = frame.shape[1] - 10
-    y2 = int(0.5 * frame.shape[1])
+    left = int(0.5 * frame.shape[1])
+    top = 10
+    right = frame.shape[1] - 10
+    bottom = int(0.5 * frame.shape[1])
     # drawing the ROI
-    # the increment/decrement by 1 is to compensate for the bounding box
-    cv2.rectangle(frame, (220 - 1, 9), (620 + 1, 419), (255, 0, 0), 1)
     # extracting the ROI
     roi = frame[10:410, 220:520]
 
-    cv2.imshow("Data Collection", frame)
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
-    blur = cv2.GaussianBlur(gray, (5, 5), 2)
+    if num_frames < 30:
+        run_avg(gray, accumWeight)
+        if num_frames == 1:
+            print("[STATUS] please wait! calibrating...")
+        elif num_frames == 29:
+            print("[STATUS] calibration successfull...")
+    else:
+        # segment the hand region
+        hand = segment(gray)
 
-    th3 = cv2.adaptiveThreshold(
-        blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2
-    )
-    ret, test_image = cv2.threshold(
-        th3, minValue, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
-    )
+        # check whether hand region is segmented
+        if hand is not None:
+            # if yes, unpack the thresholded image and
+            # segmented region
+            (thresholded, segmented) = hand
 
-    test_image = cv2.resize(test_image, (300, 300))
-    cv2.imshow("Threshold Image", test_image)
+            # draw the segmented region and display the frame
+            cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
+
+            thresholded = cv2.resize(thresholded, (210, 280))
+            cv2.imshow("Threshold Image", thresholded)
+    
+    # the increment/decrement by 1 is to compensate for the bounding box
+    cv2.rectangle(clone, (left, top), (right, bottom), (255, 0, 0), 1)
+
+    cv2.imshow("Data Collection", clone)
+    
+    # increment the number of frames
+    num_frames += 1
 
     # interrupts
     interrupt = cv2.waitKey(10)

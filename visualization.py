@@ -3,12 +3,14 @@
 from keras.models import load_model
 import cv2
 import numpy as np
+from image_processing import run_avg, segment
 
+accumWeight = 0.5
 
 def _load_weights():
     """Load Model Weights."""
     try:
-        model = load_model("hand_gesture_recog_model.h5")
+        model = load_model("model.h5")
         print(model.summary())
         # print(model.get_weights())
         # print(model.optimizer)
@@ -19,28 +21,51 @@ def _load_weights():
 
     
 def getPredictedClass(model):
-
     image = cv2.imread('Temp.png')
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gray_image = cv2.resize(gray_image, (100, 120))
+    gray_image = cv2.resize(gray_image, (210, 280))
 
-    gray_image = gray_image.reshape(1, 100, 120, 1)
+    gray_image = gray_image.reshape(1, 210, 280, 1)
 
     prediction = model.predict_on_batch(gray_image)
 
     predicted_class = np.argmax(prediction)
     if predicted_class == 0:
-        return "Blank"
+        return "down"
     elif predicted_class == 1:
-        return "OK"
+        return "8"
     elif predicted_class == 2:
-        return "Thumbs Up"
+        return "5"
     elif predicted_class == 3:
-        return "Thumbs Down"
+        return "4"
     elif predicted_class == 4:
-        return "Punch"
+        return "left"
     elif predicted_class == 5:
-        return "High Five"
+        return "9"
+    elif predicted_class == 5:
+        return "off"
+    elif predicted_class == 6:
+        return "ok"
+    elif predicted_class == 7:
+        return "on"
+    elif predicted_class == 8:
+        return "1"
+    elif predicted_class == 9:
+        return "right"
+    elif predicted_class == 10:
+        return "7"
+    elif predicted_class == 11:
+        return "6"
+    elif predicted_class == 12:
+        return "3"
+    elif predicted_class == 13:
+        return "2"
+    elif predicted_class == 14:
+        return "1"
+    elif predicted_class == 15:
+        return "up"
+    elif predicted_class == 16:
+        return "0"
 
 
 if __name__ == "__main__":
@@ -53,14 +78,16 @@ if __name__ == "__main__":
     fps = int(camera.get(cv2.CAP_PROP_FPS))
     # region of interest (ROI) coordinates
     top, right, bottom, left = 10, 350, 225, 590
+
     # initialize num of frames
     num_frames = 0
     # calibration indicator
     calibrated = False
+
     model = _load_weights()
+
     k = 0
-    # keep looping, until interrupted
-    while (True):
+    while True:
         # get the current frame
         (grabbed, frame) = camera.read()
 
@@ -112,7 +139,7 @@ if __name__ == "__main__":
 
                 # show the thresholded image
                 cv2.imshow("Thesholded", thresholded)
-        k = k + 1
+        k += 1
         # draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0, 255, 0), 2)
 
@@ -132,53 +159,3 @@ if __name__ == "__main__":
     # free up memory
     camera.release()
     cv2.destroyAllWindows()
-
-# def predict(test_image):
-#     test_image = cv2.resize(test_image, (128, 128))
-#     result = loaded_model.predict(test_image.reshape(1, 128, 128, 1))
-
-#     prediction = {}
-#     inde = 0
-#     for i in labels:
-#         prediction[i] = result[0][inde]
-#         inde += 1
-
-#     # LAYER 1
-#     prediction = sorted(prediction.items(),
-#                         key=operator.itemgetter(1), reverse=True)
-    
-#     print(prediction)
-
-#     current_symbol = prediction[0][0]
-#     print(current_symbol)
-
-
-# cap = cv2.VideoCapture(0)
-# while True:
-#     ok, frame = cap.read()
-#     if ok:
-#         image = cv2.flip(frame, 1)
-
-#         x1 = int(0.5*frame.shape[1])
-#         y1 = 10
-#         x2 = frame.shape[1]-10
-#         y2 = int(0.5*frame.shape[1])
-#         cv2.rectangle(frame, (x1-1, y1-1), (x2+1, y2+1), (255, 0, 0), 1)
-
-#         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)
-#         image = image[y1:y2, x1:x2]
-#         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-#         blur = cv2.GaussianBlur(gray, (5, 5), 2)
-#         th3 = cv2.adaptiveThreshold(
-#             blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-#         ret, res = cv2.threshold(
-#             th3, 70, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-#         predict(res)
-
-#         cv2.imshow('Prediction', image)
-
-#         if cv2.waitKey(1) & 0xFF == 27:  # esc
-#             break
-
-# cap.release()
-# cv2.destroyAllWindows()
