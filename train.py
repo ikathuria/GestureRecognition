@@ -12,7 +12,7 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 from keras.optimizers import Adam
 
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Step 1: Converting dataset
 loaded_images = []
@@ -31,7 +31,7 @@ for folder in os.listdir(dataset_path):
         loaded_images.append(gray_image)
         k += 1
 
-print("Total images in dataset:", len(loaded_images))  # 1700
+print("Total images in dataset:", len(loaded_images))  # 1800
 
 outputVectors = []
 
@@ -41,7 +41,7 @@ for i in range(18):
         temp[i] = 1
         outputVectors.append(temp)
 
-print("Output vector length:", len(outputVectors))  # 1700
+print("Output vector length:", len(outputVectors))  # 1800
 
 
 X = np.asarray(loaded_images)
@@ -57,25 +57,6 @@ print("Number of training images:", X_train.shape)
 print("Number of test images:", X_test.shape)
 
 # Step 2: Model
-# Conv + Pooling + Fully connected (Dense)
-# model = Sequential()
-# model.add(Conv2D(32, (3, 3), activation="relu", input_shape=(100, 100, 3)))
-# model.add(MaxPooling2D((2, 2)))
-# model.add(Conv2D(64, (3, 3), activation="relu"))
-# model.add(MaxPooling2D((2, 2)))
-# model.add(Conv2D(64, (3, 3), activation="relu"))
-
-# model.add(Flatten())
-# model.add(Dense(64, activation="relu"))
-# model.add(Dropout(0.20))
-# model.add(Dense(32, activation="relu"))
-# model.add(Dropout(0.20))
-# model.add(Dense(18, activation='softmax'))
-
-# model.compile(optimizer="adam", loss="categorical_crossentropy",
-#               metrics=["accuracy"])
-
-# model.summary()
 model = Sequential()
 
 # first conv layer
@@ -90,6 +71,12 @@ model.add(Conv2D(64, kernel_size=(3, 3), activation="relu"))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
+
+# third conv layer
+model.add(Conv2D(96, kernel_size=(3, 3), activation="relu"))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.20))
 
 # flatten and put a fully connected layer
 model.add(Flatten())
@@ -109,11 +96,6 @@ model.compile(
 model.summary()
 
 # Step 3: Fit the model
-# model.fit_generator(
-#     generator=training_generator,
-#     validation_data=validation_generator,
-#     epochs=100
-# )
 model.fit(
     X_train,
     y_train,
@@ -124,11 +106,4 @@ model.fit(
 )
 
 # Step 4: Save the model
-# model_json = model.to_json()
-# with open("model/model.json", "w") as json_file:
-#     json_file.write(model_json)
-# print("Model Saved")
-
-# model.save_weights("model/model.h5")
-# print("Weights saved")
-model.save("hand_gesture_recognition.h5")
+model.save("model.h5")
