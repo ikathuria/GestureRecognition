@@ -26,6 +26,7 @@ labels = [
     "off",
     "on",
     "ok",
+    "blank",
 ]
 
 for i in labels:
@@ -64,6 +65,7 @@ while True:
         "off": len(os.listdir(directory + "off")),
         "on": len(os.listdir(directory + "on")),
         "ok": len(os.listdir(directory + "ok")),
+        "blank": len(os.listdir(directory + "blank")),
     }
 
     # printing the count in each set to the screen
@@ -220,6 +222,15 @@ while True:
         (227, 132, 54),
         1,
     )
+    cv2.putText(
+        frame,
+        "blank : " + str(count["blank"]),
+        (10, 410),
+        cv2.FONT_HERSHEY_PLAIN,
+        1,
+        (227, 132, 54),
+        1,
+    )
 
     # coordinates of the Region Of Interest (ROI)
     x1 = int(0.5 * frame.shape[1])
@@ -285,6 +296,8 @@ while True:
         cv2.imwrite(directory + "on/" + str(count["on"]) + ".jpg", roi)
     if interrupt & 0xFF == ord("k"):
         cv2.imwrite(directory + "ok/" + str(count["ok"]) + ".jpg", roi)
+    if interrupt & 0xFF == ord("b"):
+        cv2.imwrite(directory + "blank/" + str(count["blank"]) + ".jpg", roi)
 
 cap.release()
 cv2.destroyAllWindows()
