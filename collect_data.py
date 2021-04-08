@@ -50,9 +50,10 @@ calibrated = False
 
 while True:
     ret, frame = cap.read()
-    # simulating mirror image
+
+    # removing mirror image
     frame = cv2.flip(frame, 1)
-    
+
     # clone the frame
     clone = frame.copy()
 
@@ -79,177 +80,65 @@ while True:
     }
 
     # printing the count in each set to the screen
-    cv2.putText(
-        frame,
-        "zero : " + str(count["zero"]),
-        (10, 70),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "one : " + str(count["one"]),
-        (10, 90),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "two : " + str(count["two"]),
-        (10, 110),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "three : " + str(count["three"]),
-        (10, 130),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "four : " + str(count["four"]),
-        (10, 150),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "five : " + str(count["five"]),
-        (10, 170),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "six : " + str(count["six"]),
-        (10, 190),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "seven : " + str(count["seven"]),
-        (10, 210),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "eight : " + str(count["eight"]),
-        (10, 230),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "nine : " + str(count["nine"]),
-        (10, 250),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "up : " + str(count["up"]),
-        (10, 270),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "down : " + str(count["down"]),
-        (10, 290),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "left : " + str(count["left"]),
-        (10, 310),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "right : " + str(count["right"]),
-        (10, 330),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "off : " + str(count["off"]),
-        (10, 350),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "on : " + str(count["on"]),
-        (10, 370),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "ok : " + str(count["ok"]),
-        (10, 390),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
-    cv2.putText(
-        frame,
-        "blank : " + str(count["blank"]),
-        (10, 410),
-        cv2.FONT_HERSHEY_PLAIN,
-        1,
-        (0, 0, 0),
-        3,
-    )
+    cv2.putText(clone, "ZERO : " + str(count["zero"]), (10, 70),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "ONE : " + str(count["one"]), (10, 90),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "TWO : " + str(count["two"]), (10, 110),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "THREE : " + str(count["three"]), (10, 130),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "FOUR : " + str(count["four"]), (10, 150),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "FIVE : " + str(count["five"]), (10, 170),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "SIX : " + str(count["six"]), (10, 190),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "SEVEN : " + str(count["seven"]), (10, 210),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "EIGHT : " + str(count["eight"]), (10, 230),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "NINE : " + str(count["nine"]), (10, 250),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "UP : " + str(count["up"]), (10, 270),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "DOWN : " + str(count["down"]), (10, 290),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "LEFT : " + str(count["left"]), (10, 310),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "RIGHT : " + str(count["right"]), (10, 330),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "OFF : " + str(count["off"]), (10, 350),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "ON : " + str(count["on"]), (10, 370),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "OK : " + str(count["ok"]), (10, 390),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+
+    cv2.putText(clone, "BLANK : " + str(count["blank"]), (10, 410),
+                cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
 
     # coordinates of the Region Of Interest (ROI)
-    left = int(0.5 * frame.shape[1])
-    top = 10
-    right = frame.shape[1] - 10
-    bottom = int(0.5 * frame.shape[1])
+    top, right, bottom, left = 10, 310, 310, 610
+
     # drawing the ROI
-    # extracting the ROI
-    roi = frame[10:410, 220:520]
+    roi = frame[top:bottom, right:left]
 
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (7, 7), 0)
@@ -257,7 +146,7 @@ while True:
     if num_frames < 30:
         run_avg(gray, accumWeight)
         if num_frames == 1:
-            print("[STATUS] please wait! calibrating...")
+            print("\n[STATUS] please wait! calibrating...")
         elif num_frames == 29:
             print("[STATUS] calibration successfull...")
     else:
@@ -271,16 +160,17 @@ while True:
             (thresholded, segmented) = hand
 
             # draw the segmented region and display the frame
-            cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
+            cv2.drawContours(
+                clone, [segmented + (right, top)], -1, (0, 0, 255))
 
-            thresholded = cv2.resize(thresholded, (210, 280))
             cv2.imshow("Threshold Image", thresholded)
-    
-    # the increment/decrement by 1 is to compensate for the bounding box
+
+    # bounding box
     cv2.rectangle(clone, (left, top), (right, bottom), (255, 0, 0), 1)
 
+    # data collection frame
     cv2.imshow("Data Collection", clone)
-    
+
     # increment the number of frames
     num_frames += 1
 
@@ -288,42 +178,48 @@ while True:
     interrupt = cv2.waitKey(10)
     if interrupt & 0xFF == 27:  # esc
         break
+
+    # recalibrate
+    if interrupt & 0xFF == ord("c"):
+        num_frames = 0
+
+    # take pictures
     if interrupt & 0xFF == ord("0"):
-        cv2.imwrite(directory + "zero/" + str(count["zero"]) + ".jpg", roi)
+        cv2.imwrite(directory + "zero/" + str(count["zero"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("1"):
-        cv2.imwrite(directory + "one/" + str(count["one"]) + ".jpg", roi)
+        cv2.imwrite(directory + "one/" + str(count["one"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("2"):
-        cv2.imwrite(directory + "two/" + str(count["two"]) + ".jpg", roi)
+        cv2.imwrite(directory + "two/" + str(count["two"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("3"):
-        cv2.imwrite(directory + "three/" + str(count["three"]) + ".jpg", roi)
+        cv2.imwrite(directory + "three/" + str(count["three"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("4"):
-        cv2.imwrite(directory + "four/" + str(count["four"]) + ".jpg", roi)
+        cv2.imwrite(directory + "four/" + str(count["four"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("5"):
-        cv2.imwrite(directory + "five/" + str(count["five"]) + ".jpg", roi)
+        cv2.imwrite(directory + "five/" + str(count["five"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("6"):
-        cv2.imwrite(directory + "six/" + str(count["six"]) + ".jpg", roi)
+        cv2.imwrite(directory + "six/" + str(count["six"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("7"):
-        cv2.imwrite(directory + "seven/" + str(count["seven"]) + ".jpg", roi)
+        cv2.imwrite(directory + "seven/" + str(count["seven"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("8"):
-        cv2.imwrite(directory + "eight/" + str(count["eight"]) + ".jpg", roi)
+        cv2.imwrite(directory + "eight/" + str(count["eight"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("9"):
-        cv2.imwrite(directory + "nine/" + str(count["nine"]) + ".jpg", roi)
+        cv2.imwrite(directory + "nine/" + str(count["nine"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("u"):
-        cv2.imwrite(directory + "up/" + str(count["up"]) + ".jpg", roi)
+        cv2.imwrite(directory + "up/" + str(count["up"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("d"):
-        cv2.imwrite(directory + "down/" + str(count["down"]) + ".jpg", roi)
+        cv2.imwrite(directory + "down/" + str(count["down"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("l"):
-        cv2.imwrite(directory + "left/" + str(count["left"]) + ".jpg", roi)
+        cv2.imwrite(directory + "left/" + str(count["left"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("r"):
-        cv2.imwrite(directory + "right/" + str(count["right"]) + ".jpg", roi)
+        cv2.imwrite(directory + "right/" + str(count["right"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("f"):
-        cv2.imwrite(directory + "off/" + str(count["off"]) + ".jpg", roi)
+        cv2.imwrite(directory + "off/" + str(count["off"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("o"):
-        cv2.imwrite(directory + "on/" + str(count["on"]) + ".jpg", roi)
+        cv2.imwrite(directory + "on/" + str(count["on"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("k"):
-        cv2.imwrite(directory + "ok/" + str(count["ok"]) + ".jpg", roi)
+        cv2.imwrite(directory + "ok/" + str(count["ok"]) + ".jpg", thresholded)
     if interrupt & 0xFF == ord("b"):
-        cv2.imwrite(directory + "blank/" + str(count["blank"]) + ".jpg", roi)
+        cv2.imwrite(directory + "blank/" + str(count["blank"]) + ".jpg", thresholded)
 
 cap.release()
 cv2.destroyAllWindows()
