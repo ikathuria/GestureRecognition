@@ -13,8 +13,6 @@ def _load_weights():
     try:
         model = load_model("model/model.h5")
         print(model.summary())
-        print(model.get_weights())
-        print(model.optimizer)
         return model
 
     except Exception as e:
@@ -89,13 +87,12 @@ if __name__ == "__main__":
 
     model = _load_weights()
 
-    k = 0
     while True:
         # get the current frame
         (grabbed, frame) = camera.read()
 
         # resize the frame
-        frame = cv2.resize(frame, (700, 700))
+        # frame = cv2.resize(frame, (500, 500))
         # flip the frame so that it is not the mirror view
         frame = cv2.flip(frame, 1)
 
@@ -136,15 +133,13 @@ if __name__ == "__main__":
 
                 # count the number of fingers
                 # fingers = count(thresholded, segmented)
-                if k % (fps / 6) == 0:
-                    cv2.imwrite('Temp.png', thresholded)
-                    predictedClass = getPredictedClass(model)
-                    cv2.putText(clone, str(predictedClass), (70, 45),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.imwrite('Temp.png', thresholded)
+                predictedClass = getPredictedClass(model)
+                cv2.putText(clone, str(predictedClass), (70, 45),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
                 # show the thresholded image
                 cv2.imshow("Thesholded", thresholded)
-        k += 1
         # draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0, 255, 0), 2)
 
