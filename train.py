@@ -52,8 +52,8 @@ print("y shape:", y.shape)
 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=4)
-X_train = X_train.reshape(X_train.shape[0], 210, 280, 1)
-X_test = X_test.reshape(X_test.shape[0], 210, 280, 1)
+X_train = X_train.reshape(X_train.shape[0], 100, 100, 1)
+X_test = X_test.reshape(X_test.shape[0], 100, 100, 1)
 print("Number of training images:", X_train.shape)
 print("Number of test images:", X_test.shape)
 
@@ -81,7 +81,7 @@ model = Sequential()
 
 # first conv layer
 # input shape = (img_rows, img_cols, 1)
-model.add(Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=(210, 280, 1)))
+model.add(Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=(100, 100, 1)))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
@@ -119,7 +119,7 @@ model.fit(
     X_train,
     y_train,
     batch_size=8,
-    epochs=10,
+    epochs=100,
     verbose=1,
     validation_data=(X_test, y_test),
 )
