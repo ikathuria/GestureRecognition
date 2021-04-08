@@ -7,65 +7,68 @@ from image_processing import run_avg, segment
 
 accumWeight = 0.5
 
+
 def _load_weights():
     """Load Model Weights."""
     try:
-        model = load_model("model.h5")
+        model = load_model("model/model.h5")
         print(model.summary())
-        # print(model.get_weights())
-        # print(model.optimizer)
+        print(model.get_weights())
+        print(model.optimizer)
         return model
+
     except Exception as e:
         return None
 
 
-    
 def getPredictedClass(model):
     image = cv2.imread('Temp.png')
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gray_image = cv2.resize(gray_image, (210, 280))
 
-    gray_image = gray_image.reshape(1, 210, 280, 1)
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray_image = cv2.resize(gray_image, (100, 100))
+    gray_image = gray_image.reshape(1, 100, 100, 1)
 
     prediction = model.predict_on_batch(gray_image)
 
     predicted_class = np.argmax(prediction)
     if predicted_class == 0:
-        return "down"
+        return "BLANK"
     elif predicted_class == 1:
-        return "8"
+        return "DOWN"
     elif predicted_class == 2:
-        return "5"
+        return "EIGHT"
     elif predicted_class == 3:
-        return "4"
+        return "FIVE"
     elif predicted_class == 4:
-        return "left"
+        return "FOUR"
     elif predicted_class == 5:
-        return "9"
-    elif predicted_class == 5:
-        return "off"
+        return "LEFT"
     elif predicted_class == 6:
-        return "ok"
+        return "NINE"
     elif predicted_class == 7:
-        return "on"
+        return "OFF"
     elif predicted_class == 8:
-        return "1"
+        return "OK"
     elif predicted_class == 9:
-        return "right"
+        return "ON"
     elif predicted_class == 10:
-        return "7"
+        return "ONE"
     elif predicted_class == 11:
-        return "6"
+        return "RIGHT"
     elif predicted_class == 12:
-        return "3"
+        return "SEVEN"
     elif predicted_class == 13:
-        return "2"
+        return "SIX"
     elif predicted_class == 14:
-        return "1"
+        return "THREE"
     elif predicted_class == 15:
-        return "up"
+        return "TWO"
     elif predicted_class == 16:
-        return "0"
+        return "ONE"
+    elif predicted_class == 17:
+        return "UP"
+    elif predicted_class == 18:
+        return "ZERO"
 
 
 if __name__ == "__main__":
@@ -77,7 +80,7 @@ if __name__ == "__main__":
 
     fps = int(camera.get(cv2.CAP_PROP_FPS))
     # region of interest (ROI) coordinates
-    top, right, bottom, left = 10, 350, 225, 590
+    top, right, bottom, left = 10, 310, 310, 610
 
     # initialize num of frames
     num_frames = 0
@@ -92,7 +95,7 @@ if __name__ == "__main__":
         (grabbed, frame) = camera.read()
 
         # resize the frame
-        frame = cv2.resize(frame, (700,700))
+        frame = cv2.resize(frame, (700, 700))
         # flip the frame so that it is not the mirror view
         frame = cv2.flip(frame, 1)
 
@@ -128,14 +131,16 @@ if __name__ == "__main__":
                 (thresholded, segmented) = hand
 
                 # draw the segmented region and display the frame
-                cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
+                cv2.drawContours(
+                    clone, [segmented + (right, top)], -1, (0, 0, 255))
 
                 # count the number of fingers
                 # fingers = count(thresholded, segmented)
                 if k % (fps / 6) == 0:
                     cv2.imwrite('Temp.png', thresholded)
                     predictedClass = getPredictedClass(model)
-                    cv2.putText(clone, str(predictedClass), (70, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                    cv2.putText(clone, str(predictedClass), (70, 45),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
                 # show the thresholded image
                 cv2.imshow("Thesholded", thresholded)
@@ -147,7 +152,7 @@ if __name__ == "__main__":
         num_frames += 1
 
         # display the frame with segmented hand
-        cv2.imshow("Video Feed", clone)
+        cv2.imshow("Gesture Recognition", clone)
 
         # observe the keypress by the user
         keypress = cv2.waitKey(1) & 0xFF
@@ -155,6 +160,8 @@ if __name__ == "__main__":
         # if the user pressed "q", then stop looping
         if keypress == ord("q"):
             break
+        elif keypress == ord("c"):
+            num_frames = 0
 
     # free up memory
     camera.release()
