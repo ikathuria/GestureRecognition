@@ -21,6 +21,9 @@ def _load_weights():
 
 def getPredictedClass(model):
     image = cv2.imread('Temp.png')
+    
+    if image.all() == None:
+        return "BLANK"
 
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray_image = cv2.resize(gray_image, (100, 100))
@@ -29,7 +32,7 @@ def getPredictedClass(model):
     prediction = model.predict_on_batch(gray_image)
 
     predicted_class = np.argmax(prediction)
-    if predicted_class == 0:
+    if predicted_class == None:
         return "BLANK"
     elif predicted_class == 1:
         return "DOWN"
@@ -120,7 +123,7 @@ if __name__ == "__main__":
         else:
             # segment the hand region
             hand = segment(gray)
-
+            
             # check whether hand region is segmented
             if hand is not None:
                 # if yes, unpack the thresholded image and
@@ -131,15 +134,16 @@ if __name__ == "__main__":
                 cv2.drawContours(
                     clone, [segmented + (right, top)], -1, (0, 0, 255))
 
-                # count the number of fingers
                 # fingers = count(thresholded, segmented)
                 cv2.imwrite('Temp.png', thresholded)
-                predictedClass = getPredictedClass(model)
-                cv2.putText(clone, str(predictedClass), (70, 45),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
                 # show the thresholded image
                 cv2.imshow("Thesholded", thresholded)
+            
+            predictedClass = getPredictedClass(model)
+            cv2.putText(clone, str(predictedClass), (70, 45),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
         # draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0, 255, 0), 2)
 
