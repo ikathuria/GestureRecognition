@@ -80,8 +80,11 @@ model.add(Dropout(0.20))
 
 # flatten and put a fully connected layer
 model.add(Flatten())
-model.add(Dense(128, activation="relu"))  # fully connected
-model.add(Dropout(0.5))
+model.add(Dense(128, activation="relu"))
+model.add(Dropout(0.20))
+
+model.add(Dense(64, activation="relu"))
+model.add(Dropout(0.30))
 
 # softmax layer
 model.add(Dense(18, activation="softmax"))
