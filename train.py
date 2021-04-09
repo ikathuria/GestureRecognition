@@ -1,5 +1,6 @@
 """The main CNN."""
 
+from datetime import datetime as dt
 import os
 import cv2
 import numpy as np
@@ -13,11 +14,31 @@ from keras.callbacks import EarlyStopping
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Step 1: Converting dataset
-loaded_images = []
+labels = [
+    "blank",
+    "down",
+    "eight",
+    "five",
+    "four",
+    "left",
+    "nine",
+    "off",
+    "ok",
+    "on",
+    "one",
+    "right",
+    "seven",
+    "six",
+    "three",
+    "two",
+    "up",
+    "zero",
+]
 
 dataset_path = "data1"
 
-for folder in os.listdir(dataset_path):
+loaded_images = []
+for folder in labels:
     gesture_path = os.path.join(dataset_path, folder)
 
     k = 0
@@ -93,7 +114,7 @@ model.summary()
 model.fit(
     X_train,
     y_train,
-    batch_size=8,
+    batch_size=300,
     epochs=100,
     verbose=1,
     validation_data=(X_test, y_test),
@@ -101,4 +122,6 @@ model.fit(
 )
 
 # Step 4: Save the model
-model.save("model.h5")
+today = dt.now().strftime("%d-%m")
+model.save(f"{today}_model.h5")
+print("Model saved")

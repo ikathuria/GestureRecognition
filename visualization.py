@@ -1,12 +1,15 @@
 """Visualizing the results."""
 
-from keras.models import load_model
+import os
 import cv2
 import numpy as np
+from keras.models import load_model
 from image_processing import run_avg, segment
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 accumWeight = 0.5
-latest_model = "model/model_1000.h5"
+latest_model = "model/" + "09-04_model_33.h5"
 
 
 def _load_weights():
@@ -141,8 +144,15 @@ if __name__ == "__main__":
 
                 predictedClass = getPredictedClass(model)
 
-                cv2.putText(clone, str(predictedClass), (70, 45),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2,)
+                cv2.putText(
+                    clone,
+                    str(predictedClass),
+                    (70, 45),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 0, 255),
+                    2,
+                )
 
         # draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0, 255, 0), 2)
