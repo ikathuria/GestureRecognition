@@ -9,7 +9,7 @@ from image_processing import run_avg, segment
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 accumWeight = 0.5
-latest_model = "model/" + "09-04_model_33.h5"
+latest_model = "model/" + "09-04_model_24.h5"
 
 
 def _load_weights():
@@ -68,28 +68,19 @@ def getPredictedClass(model):
     elif predicted_class == 15:
         return "TWO"
     elif predicted_class == 16:
-        return "ONE"
-    elif predicted_class == 17:
         return "UP"
-    elif predicted_class == 18:
+    elif predicted_class == 17:
         return "ZERO"
 
 
 if __name__ == "__main__":
-    # initialize accumulated weight
-    accumWeight = 0.5
-
-    # get the reference to the webcam
     camera = cv2.VideoCapture(0)
 
-    fps = int(camera.get(cv2.CAP_PROP_FPS))
     # region of interest (ROI) coordinates
     top, right, bottom, left = 10, 310, 310, 610
 
     # initialize num of frames
     num_frames = 0
-    # calibration indicator
-    calibrated = False
 
     model = _load_weights()
 
@@ -127,32 +118,23 @@ if __name__ == "__main__":
             # segment the hand region
             hand = segment(gray)
 
-            # check whether hand region is segmented
             if hand is not None:
-                # if yes, unpack the thresholded image and
-                # segmented region
                 (thresholded, segmented) = hand
-
-                # draw the segmented region and display the frame
+                
                 cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
 
-                # fingers = count(thresholded, segmented)
-                cv2.imwrite("Temp.png", thresholded)
-
-                # show the thresholded image
-                cv2.imshow("Thesholded", thresholded)
+                cv2.imwrite('Temp.png', thresholded)
 
                 predictedClass = getPredictedClass(model)
 
-                cv2.putText(
-                    clone,
-                    str(predictedClass),
-                    (70, 45),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    1,
-                    (0, 0, 255),
-                    2,
-                )
+                cv2.putText(clone, str(predictedClass), (70, 45),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+                cv2.imshow("Thesholded", thresholded)
+
+            else:
+                cv2.putText(clone, "BLANK", (70, 45),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         # draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0, 255, 0), 2)
