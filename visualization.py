@@ -6,12 +6,13 @@ import numpy as np
 from image_processing import run_avg, segment
 
 accumWeight = 0.5
+latest_model = "model/model_1000.h5"
 
 
 def _load_weights():
     """Load Model Weights."""
     try:
-        model = load_model("model/model.h5")
+        model = load_model(latest_model)
         print(model.summary())
         return model
 
@@ -20,10 +21,7 @@ def _load_weights():
 
 
 def getPredictedClass(model):
-    image = cv2.imread('Temp.png')
-    
-    if image.all() == None:
-        return "BLANK"
+    image = cv2.imread("Temp.png")
 
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray_image = cv2.resize(gray_image, (100, 100))
@@ -32,7 +30,9 @@ def getPredictedClass(model):
     prediction = model.predict_on_batch(gray_image)
 
     predicted_class = np.argmax(prediction)
-    if predicted_class == None:
+    print(predicted_class)
+
+    if predicted_class == 0:
         return "BLANK"
     elif predicted_class == 1:
         return "DOWN"
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         else:
             # segment the hand region
             hand = segment(gray)
-            
+
             # check whether hand region is segmented
             if hand is not None:
                 # if yes, unpack the thresholded image and
@@ -131,18 +131,18 @@ if __name__ == "__main__":
                 (thresholded, segmented) = hand
 
                 # draw the segmented region and display the frame
-                cv2.drawContours(
-                    clone, [segmented + (right, top)], -1, (0, 0, 255))
+                cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
 
                 # fingers = count(thresholded, segmented)
-                cv2.imwrite('Temp.png', thresholded)
+                cv2.imwrite("Temp.png", thresholded)
 
                 # show the thresholded image
                 cv2.imshow("Thesholded", thresholded)
-            
-            predictedClass = getPredictedClass(model)
-            cv2.putText(clone, str(predictedClass), (70, 45),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+                predictedClass = getPredictedClass(model)
+
+                cv2.putText(clone, str(predictedClass), (70, 45),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2,)
 
         # draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0, 255, 0), 2)
