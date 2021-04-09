@@ -4,13 +4,11 @@ import os
 import cv2
 import numpy as np
 from sklearn.model_selection import train_test_split
-import keras
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten, BatchNormalization
-from keras.layers import Activation, Dropout
 from keras.layers import Conv2D, MaxPooling2D
-from keras import backend as K
-from keras.optimizers import Adam
+from keras.layers import Dense, Dropout, Flatten, BatchNormalization
+from keras.layers import Dropout
+from keras.callbacks import EarlyStopping
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -36,9 +34,9 @@ print("Total images in dataset:", len(loaded_images))  # 1800
 outputVectors = []
 
 for i in range(18):
+    temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    temp[i] = 1
     for _ in range(0, k):
-        temp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        temp[i] = 1
         outputVectors.append(temp)
 
 print("Output vector length:", len(outputVectors))  # 1800
@@ -70,32 +68,25 @@ model.add(Dropout(0.25))
 model.add(Conv2D(64, kernel_size=(3, 3), activation="relu"))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-# third conv layer
-model.add(Conv2D(96, kernel_size=(3, 3), activation="relu"))
-model.add(BatchNormalization())
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.20))
+model.add(Dropout(0.30))
 
 # flatten and put a fully connected layer
 model.add(Flatten())
 model.add(Dense(128, activation="relu"))
-model.add(Dropout(0.20))
-
-model.add(Dense(64, activation="relu"))
-model.add(Dropout(0.30))
+model.add(Dropout(0.40))
 
 # softmax layer
 model.add(Dense(18, activation="softmax"))
 
 # model summary
-optimiser = Adam()
 model.compile(
-    optimizer=optimiser,
+    optimizer="adam",
     loss="categorical_crossentropy",
     metrics=["categorical_accuracy"],
 )
+
+es_callback = EarlyStopping(monitor='val_loss', patience=3)
+
 model.summary()
 
 # Step 3: Fit the model
@@ -106,6 +97,7 @@ model.fit(
     epochs=100,
     verbose=1,
     validation_data=(X_test, y_test),
+    callbacks=[es_callback],
 )
 
 # Step 4: Save the model
