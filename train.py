@@ -19,7 +19,7 @@ labels = ["zero", "one", "two", "three", "four",
           "up", "down", "left", "right", "off", "on",
           "ok", "blank"]
 
-dataset_path = "data1"
+dataset_path = "data"
 
 loaded_images = []
 for folder in labels:

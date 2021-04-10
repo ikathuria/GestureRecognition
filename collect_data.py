@@ -9,7 +9,7 @@ from image_processing import run_avg, segment
 accumWeight = 0.5
 
 # path
-directory = "data1/"
+directory = "data/"
 
 # training labels
 labels = ["zero", "one", "two", "three", "four",
@@ -18,12 +18,12 @@ labels = ["zero", "one", "two", "three", "four",
           "ok", "blank"]
 
 # create the directories
-if not os.path.exists("data1"):
-    os.makedirs("data1")
+if not os.path.exists("data"):
+    os.makedirs("data")
 
 for i in labels:
-    if not os.path.exists("data1/" + i):
-        os.makedirs("data1/" + i)
+    if not os.path.exists("data/" + i):
+        os.makedirs("data/" + i)
 
 cap = cv2.VideoCapture(0)
 num_frames = 0
