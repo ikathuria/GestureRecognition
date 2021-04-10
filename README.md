@@ -9,10 +9,10 @@
 2. Install all the dependencies  
 `pip install -r requirements.txt`
 
-3. Navigate to that folder 
+3. Navigate to that folder  
 `cd GestureRecognition`
 
-3. Run the visualization file to see the outputs  
+4. Run the visualization file to see the outputs  
 `python visualization.py`
 
 ## TODO
