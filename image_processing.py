@@ -1,3 +1,5 @@
+"""Functions required for real-time image processing."""
+
 import cv2
 import numpy as np
 
@@ -6,6 +8,12 @@ bg = None
 
 
 def run_avg(image, aWeight):
+    """Set real-time background.
+
+    Args:
+        image: the background image.
+        aWeight: accumulated weight.
+    """
     global bg
     # initialize the background
     if bg is None:
@@ -17,6 +25,12 @@ def run_avg(image, aWeight):
 
 
 def segment(image, threshold=25):
+    """Segment the image.
+
+    Args:
+        image: the image to be segmented.
+        threshold: the threshold value, 25 by default.
+    """
     global bg
 
     # find the absolute difference between background and current frame

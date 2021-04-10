@@ -5,48 +5,28 @@ import numpy as np
 import os
 from image_processing import run_avg, segment
 
+# accumulated weight
 accumWeight = 0.5
 
-# Create the directories
+# path
+directory = "data1/"
+
+# training labels
+labels = ["zero", "one", "two", "three", "four",
+          "five", "six", "seven", "eight", "nine",
+          "up", "down", "left", "right", "off", "on",
+          "ok", "blank"]
+
+# create the directories
 if not os.path.exists("data1"):
     os.makedirs("data1")
-
-labels = [
-    "blank",
-    "down",
-    "eight",
-    "five",
-    "four",
-    "left",
-    "nine",
-    "off",
-    "ok",
-    "on",
-    "one",
-    "right",
-    "seven",
-    "six",
-    "three",
-    "two",
-    "up",
-    "zero",
-]
 
 for i in labels:
     if not os.path.exists("data1/" + i):
         os.makedirs("data1/" + i)
 
-
-# path
-directory = f"data1/"
-minValue = 70
-
 cap = cv2.VideoCapture(0)
-interrupt = -1
-# initialize num of frames
 num_frames = 0
-# calibration indicator
-calibrated = False
 
 while True:
     ret, frame = cap.read()
@@ -171,54 +151,53 @@ while True:
     # data collection frame
     cv2.imshow("Data Collection", clone)
 
-    # increment the number of frames
     num_frames += 1
 
-    # interrupts
-    interrupt = cv2.waitKey(10)
-    if interrupt & 0xFF == 27:  # esc
+    # on keypress
+    keypress = cv2.waitKey(10) & 0xFF
+    if keypress == 27:  # esc
         break
 
     # recalibrate
-    if interrupt & 0xFF == ord("c"):
+    if keypress == ord("c"):
         num_frames = 0
 
     # take pictures
-    if interrupt & 0xFF == ord("0"):
+    if keypress == ord("0"):
         cv2.imwrite(directory + "zero/" + str(count["zero"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("1"):
+    if keypress == ord("1"):
         cv2.imwrite(directory + "one/" + str(count["one"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("2"):
+    if keypress == ord("2"):
         cv2.imwrite(directory + "two/" + str(count["two"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("3"):
+    if keypress == ord("3"):
         cv2.imwrite(directory + "three/" + str(count["three"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("4"):
+    if keypress == ord("4"):
         cv2.imwrite(directory + "four/" + str(count["four"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("5"):
+    if keypress == ord("5"):
         cv2.imwrite(directory + "five/" + str(count["five"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("6"):
+    if keypress == ord("6"):
         cv2.imwrite(directory + "six/" + str(count["six"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("7"):
+    if keypress == ord("7"):
         cv2.imwrite(directory + "seven/" + str(count["seven"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("8"):
+    if keypress == ord("8"):
         cv2.imwrite(directory + "eight/" + str(count["eight"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("9"):
+    if keypress == ord("9"):
         cv2.imwrite(directory + "nine/" + str(count["nine"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("u"):
+    if keypress == ord("u"):
         cv2.imwrite(directory + "up/" + str(count["up"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("d"):
+    if keypress == ord("d"):
         cv2.imwrite(directory + "down/" + str(count["down"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("l"):
+    if keypress == ord("l"):
         cv2.imwrite(directory + "left/" + str(count["left"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("r"):
+    if keypress == ord("r"):
         cv2.imwrite(directory + "right/" + str(count["right"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("f"):
+    if keypress == ord("f"):
         cv2.imwrite(directory + "off/" + str(count["off"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("o"):
+    if keypress == ord("o"):
         cv2.imwrite(directory + "on/" + str(count["on"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("k"):
+    if keypress == ord("k"):
         cv2.imwrite(directory + "ok/" + str(count["ok"]) + ".jpg", thresholded)
-    if interrupt & 0xFF == ord("b"):
+    if keypress == ord("b"):
         cv2.imwrite(directory + "blank/" + str(count["blank"]) + ".jpg", thresholded)
 
 cap.release()
