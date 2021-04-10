@@ -1,9 +1,6 @@
-<div style="text-align:center">
-<img src="https://researchoutreach.org/wp-content/uploads/2020/05/Celso-de-Melo-Kazunori-Terada-Main-Image.jpg" />
+<img align="center" src="https://researchoutreach.org/wp-content/uploads/2020/05/Celso-de-Melo-Kazunori-Terada-Main-Image.jpg" />
 
-</div>
-
-<h1 style="text-align:center">🄶🄴🅂🅃🅄🅁🄴 🅁🄴🄲🄾🄶🄽🄸🅃🄸🄾🄽</h1>
+<h1 align="center">🄶🄴🅂🅃🅄🅁🄴 🅁🄴🄲🄾🄶🄽🄸🅃🄸🄾🄽</h1>
 
 ## Using the model
 1. Clone the repository using git  
