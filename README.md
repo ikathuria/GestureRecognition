@@ -6,11 +6,11 @@
 1. Clone the repository using git  
 `git clone https://github.com/ikathuria/GestureRecognition.git`
 
-2. Install all the dependencies  
-`pip install -r requirements.txt`
-
-3. Navigate to that folder  
+2. Navigate to that folder  
 `cd GestureRecognition`
+
+3. Install all the dependencies  
+`pip install -r requirements.txt`
 
 4. Run the visualization file to see the outputs  
 `python visualization.py`
