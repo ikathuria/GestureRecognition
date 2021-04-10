@@ -3,6 +3,8 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+print("setting up, please wait...")
+
 import cv2
 import numpy as np
 from keras.models import load_model
@@ -12,7 +14,7 @@ from image_processing import run_avg, segment
 accumWeight = 0.5
 
 # path
-latest_model = "model/" + "09-04_model_24.h5"
+latest_model = "model/" + "10Apr_model_22.h5"
 
 # labels in order of training output
 labels = {0: "zero", 1: "one", 2: "two", 3: "three", 4: "four",
@@ -55,8 +57,6 @@ def getPredictedClass(model):
 
     return labels[predicted_class].upper()
 
-
-print("setting up, please wait...")
 
 cap = cv2.VideoCapture(0)
 
