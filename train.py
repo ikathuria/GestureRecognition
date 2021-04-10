@@ -52,7 +52,7 @@ print("X shape:", X.shape)
 print("y shape:", y.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=4)
+    X, y, test_size=0.2, random_state=42)
 X_train = X_train.reshape(X_train.shape[0], 100, 100, 1)
 X_test = X_test.reshape(X_test.shape[0], 100, 100, 1)
 print("Number of training images:", X_train.shape)
@@ -102,7 +102,7 @@ model.fit(
     X_train,
     y_train,
     batch_size=300,
-    epochs=100,
+    epochs=35,
     verbose=1,
     validation_data=(X_test, y_test),
     callbacks=[es_callback],
