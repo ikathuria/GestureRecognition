@@ -14,13 +14,17 @@ from image_processing import run_avg, segment
 accumWeight = 0.5
 
 # path
-latest_model = "model/" + "10Apr_model_22.h5"
+latest_model = "model/" + "10Apr_model_12.h5"
 
 # labels in order of training output
 labels = {0: "zero", 1: "one", 2: "two", 3: "three", 4: "four",
           5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine",
           10: "up", 11: "down", 12: "left", 13: "right", 14: "off",
           15: "on", 16: "ok", 17: "blank"}
+# labels = {0: "blank", 1: "down", 2: "eight", 3: "five", 4: "four",
+#           5: "left", 6: "nine", 7: "off", 8: "ok", 9: "on", 10: "one",
+#           11: "right", 12: "seven", 13: "six", 14: "three", 15: "two",
+#           16: "up", 17: "zero"}
 
 
 def load_weights():
