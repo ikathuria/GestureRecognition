@@ -1,14 +1,28 @@
 """Visualizing the results with OpenCV."""
 
 import os
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+import mediapipe as mp
+
+import sys
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 print("setting up, please wait...")
 
-import cv2
-import numpy as np
 from keras.models import load_model
 from image_processing import run_avg, segment
+mp_drawing = mp.solutions.drawing_utils
+mp_hands = mp.solutions.hands
+hands = mp_hands.Hands(max_num_hands=1,
+                       min_detection_confidence=0.5,
+                       min_tracking_confidence=0.5)
+
+# sys.path.insert(0, './AdaBins')
+# from infer import InferenceHelper
+# inferHelper = InferenceHelper(device='cpu')
 
 # accumulated weight
 accumWeight = 0.5
@@ -25,6 +39,15 @@ labels = {0: "zero", 1: "one", 2: "two", 3: "three", 4: "four",
 #           5: "left", 6: "nine", 7: "off", 8: "ok", 9: "on", 10: "one",
 #           11: "right", 12: "seven", 13: "six", 14: "three", 15: "two",
 #           16: "up", 17: "zero"}
+
+
+def get_hands(image, x, y):
+    minx = min(coords_x)
+    miny = min(coords_y)
+    maxx = max(coords_x)
+    maxy = max(coords_y)
+    cv2.rectangle(image, (minx, miny), (maxx, maxy), (255, 0, 0), 2)
+    return image
 
 
 def load_weights():
@@ -50,7 +73,7 @@ def getPredictedClass(model):
     Returns:
         the predicted class.
     """
-    image = cv2.imread("Temp.png")
+    image = cv2.imread("temp_threshold.png")
 
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray_image = cv2.resize(gray_image, (100, 100))
@@ -62,10 +85,8 @@ def getPredictedClass(model):
     return labels[predicted_class].upper()
 
 
+print('switching on camera...')
 cap = cv2.VideoCapture(0)
-
-# region of interest (ROI) coordinates
-top, right, bottom, left = 10, 310, 310, 610
 
 num_frames = 0
 
@@ -76,12 +97,32 @@ while True:
 
     # flip the frame so that it is not the mirror view
     frame = cv2.flip(frame, 1)
-
-    # clone the frame
     clone = frame.copy()
+
+    # region of interest (ROI) coordinates
+    top, right, bottom, left = 10, 310, 310, 610
 
     # get the ROI
     roi = frame[top:bottom, right:left]
+    height, width, channels = roi.shape
+
+    roi.flags.writeable = False
+
+    results = hands.process(roi)
+    roi.flags.writeable = True
+
+    if results.multi_hand_landmarks:
+        for hand_landmarks in results.multi_hand_landmarks:
+            mp_drawing.draw_landmarks(
+                roi, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            landmarks = hand_landmarks.landmark
+            coords_x = []
+            coords_y = []
+            for l in landmarks:
+                coords_x.append(int(l.x*width))
+                coords_y.append(int(l.y*height))
+            # bounded_hands = get_hands(roi, coords_x, coords_y)
+            # cv2.imshow('Hands', bounded_hands)
 
     # convert the roi to grayscale and blur it
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
@@ -102,10 +143,10 @@ while True:
 
         if hand is not None:
             (thresholded, segmented) = hand
-            
+
             cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
 
-            cv2.imwrite('Temp.png', thresholded)
+            cv2.imwrite('temp_threshold.png', thresholded)
 
             predictedClass = getPredictedClass(model)
 
@@ -131,5 +172,13 @@ while True:
     elif keypress == ord("c"):
         num_frames = 0
 
+    # if os.path.exists("temp_original.jpg"):
+    #     img = cv2.imread("temp_original.jpg")
+    #     centers, pred = inferHelper.predict_pil(img)
+
+    #     plt.imshow(pred.squeeze(), cmap='magma_r')
+    #     plt.show()
+
+hands.close()
 cap.release()
 cv2.destroyAllWindows()
