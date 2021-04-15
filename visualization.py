@@ -88,6 +88,9 @@ def getPredictedClass(model):
 print('switching on camera...')
 cap = cv2.VideoCapture(0)
 
+# region of interest (ROI) coordinates
+top, right, bottom, left = 10, 310, 310, 610
+
 num_frames = 0
 
 model = load_weights()
@@ -98,31 +101,28 @@ while True:
     # flip the frame so that it is not the mirror view
     frame = cv2.flip(frame, 1)
     clone = frame.copy()
+    height, width, channels = clone.shape
 
-    # region of interest (ROI) coordinates
-    top, right, bottom, left = 10, 310, 310, 610
+    clone.flags.writeable = False
 
-    # get the ROI
-    roi = frame[top:bottom, right:left]
-    height, width, channels = roi.shape
-
-    roi.flags.writeable = False
-
-    results = hands.process(roi)
-    roi.flags.writeable = True
+    results = hands.process(clone)
+    clone.flags.writeable = True
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_drawing.draw_landmarks(
-                roi, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                clone, hand_landmarks, mp_hands.HAND_CONNECTIONS)
             landmarks = hand_landmarks.landmark
             coords_x = []
             coords_y = []
             for l in landmarks:
                 coords_x.append(int(l.x*width))
                 coords_y.append(int(l.y*height))
-            # bounded_hands = get_hands(roi, coords_x, coords_y)
+            # bounded_hands = get_hands(clone, coords_x, coords_y)
             # cv2.imshow('Hands', bounded_hands)
+
+    # get the ROI
+    roi = frame[top:bottom, right:left]
 
     # convert the roi to grayscale and blur it
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
