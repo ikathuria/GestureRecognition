@@ -83,9 +83,9 @@ def getPredictedClass(model):
 
 
 print('switching on camera...')
-hands = mp_hands.Hands(max_num_hands=2,
-                       min_detection_confidence=0.3,
-                       min_tracking_confidence=0.5)
+hands = mp_hands.Hands(max_num_hands=1,
+                       min_detection_confidence=0.2,
+                       min_tracking_confidence=0.2)
 cap = cv2.VideoCapture(0)
 
 # region of interest (ROI) coordinates
@@ -144,7 +144,19 @@ while True:
         if hand is not None:
             (thresholded, segmented) = hand
 
-            cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
+            contours, hierarchy = cv2.findContours(thresholded, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+            hull = []
+            for i in range(len(contours)):
+                hull.append(cv2.convexHull(contours[i], False))
+            
+            for i in range(len(contours)):
+                color_contours = (0, 255, 0) # green - color for contours
+                color = (255, 0, 0) # blue - color for convex hull
+                # draw ith contour
+                cv2.drawContours(thresholded, contours, i, color_contours, 1, 8, hierarchy)
+                # draw ith convex hull object
+                cv2.drawContours(thresholded, hull, i, color, 1, 8)
 
             cv2.imwrite('temp_threshold.png', thresholded)
 
@@ -159,7 +171,7 @@ while True:
             cv2.putText(clone, "BLANK", (70, 45),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-    cv2.rectangle(clone, (left, top), (right, bottom), (0, 255, 0), 2)
+    cv2.rectangle(clone, (left, top), (right, bottom), (0, 0, 0), 2)
 
     cv2.imshow("Gesture Recognition", clone)
 
