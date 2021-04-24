@@ -16,9 +16,6 @@ from keras.models import load_model
 from image_processing import run_avg, segment
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
-hands = mp_hands.Hands(max_num_hands=1,
-                       min_detection_confidence=0.5,
-                       min_tracking_confidence=0.5)
 
 # sys.path.insert(0, './AdaBins')
 # from infer import InferenceHelper
@@ -42,10 +39,10 @@ labels = {0: "zero", 1: "one", 2: "two", 3: "three", 4: "four",
 
 
 def get_hands(image, x, y):
-    minx = min(coords_x)
-    miny = min(coords_y)
-    maxx = max(coords_x)
-    maxy = max(coords_y)
+    minx = min(x)
+    miny = min(y)
+    maxx = max(x)
+    maxy = max(y)
     cv2.rectangle(image, (minx, miny), (maxx, maxy), (255, 0, 0), 2)
     return image
 
@@ -86,6 +83,9 @@ def getPredictedClass(model):
 
 
 print('switching on camera...')
+hands = mp_hands.Hands(max_num_hands=2,
+                       min_detection_confidence=0.3,
+                       min_tracking_confidence=0.5)
 cap = cv2.VideoCapture(0)
 
 # region of interest (ROI) coordinates
