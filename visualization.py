@@ -17,9 +17,6 @@ from image_processing import run_avg, segment
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
 
-# sys.path.insert(0, './AdaBins')
-# from infer import InferenceHelper
-# inferHelper = InferenceHelper(device='cpu')
 
 # accumulated weight
 accumWeight = 0.5
