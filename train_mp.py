@@ -101,7 +101,7 @@ es_callback = EarlyStopping(monitor='val_loss', patience=3)
 model.fit(
     X_train,
     y_train,
-    batch_size=10,
+    batch_size=100,
     epochs=35,
     verbose=1,
     validation_data=(X_test, y_test),
