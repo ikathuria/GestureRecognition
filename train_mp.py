@@ -30,7 +30,7 @@ for folder in labels:
         image = cv2.imread(os.path.join(gesture_path, img))
         
         # 640, 480 = 320, 240
-        image = cv2.resize(image, (320, 240))
+        image = cv2.resize(image, (240, 320))
         loaded_images.append(image)
         k += 1
 
