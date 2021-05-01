@@ -29,9 +29,10 @@ for folder in labels:
     for img in os.listdir(gesture_path):
         image = cv2.imread(os.path.join(gesture_path, img))
         
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # 640, 480 = 320, 240
-        image = cv2.resize(image, (320, 240))
-        loaded_images.append(image)
+        gray_image = cv2.resize(gray_image, (320, 240))
+        loaded_images.append(gray_image)
         k += 1
 
 print("Total images in dataset:", len(loaded_images))
@@ -53,8 +54,8 @@ print("y shape:", y.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42)
-X_train = X_train.reshape(X_train.shape[0], 240, 320, 3)
-X_test = X_test.reshape(X_test.shape[0], 240, 320, 3)
+X_train = X_train.reshape(X_train.shape[0], 240, 320, 1)
+X_test = X_test.reshape(X_test.shape[0], 240, 320, 1)
 print("Number of training images:", X_train.shape)
 print("Number of test images:", X_test.shape)
 print("---"*25, "\n\n\n")
@@ -65,7 +66,7 @@ model = Sequential()
 # first conv layer
 # input shape = (img_rows, img_cols, 1)
 model.add(Conv2D(32, kernel_size=(3, 3),
-                 activation="relu", input_shape=(240, 320, 3)))
+                 activation="relu", input_shape=(240, 320, 1)))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
