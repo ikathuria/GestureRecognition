@@ -11,8 +11,24 @@ hands = mp_hands.Hands(
     max_num_hands=1, min_detection_confidence=0.4, min_tracking_confidence=0.4
 )
 
-# global variables
 bg = None
+
+
+def find_biggest_contour(image):
+    contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+    biggest = np.array([])
+    max_area = 0
+
+    for i in contours:
+        area = cv2.contourArea(i)
+        if area > 50:
+            peri = cv2.arcLength(i, True)
+            approx = cv2.approxPolyDP(i, 0.02 * peri, True)
+            if area > max_area and len(approx) == 4:
+                biggest = approx
+                max_area = area
+    return biggest
 
 
 def run_avg(image, aWeight):
@@ -61,7 +77,7 @@ def segment(image, threshold=25):
         return (thresholded, segmented)
 
 
-def detectHands(image, draw_image):
+def detect_hands(image, draw_image):
     """Return hand part of image.
     
     Args:
@@ -88,12 +104,12 @@ def detectHands(image, draw_image):
             for l in landmarks:
                 coords_x.append(int(l.x * width))
                 coords_y.append(int(l.y * height))
-        bounded_hands = getHands(image, coords_x, coords_y)
+        bounded_hands = get_hands(image, coords_x, coords_y)
         return draw_image
     return None
 
 
-def getHands(image, x, y):
+def get_hands(image, x, y):
     """Return hand part of image.
     
     Args:
@@ -109,11 +125,12 @@ def getHands(image, x, y):
     maxx = max(x)
     maxy = max(y)
 
-    final_coords = (minx, miny, maxx, maxy)
+    final_coords = (minx-25, miny-25, maxx+25, maxy+25)
 
     top, bottom = final_coords[1], final_coords[3]
     right, left = final_coords[2], final_coords[0]
-    roi = image[top:bottom, right:left]
+    roi = image[top:bottom, left:right+left]
 
-    if roi.shape[0]*roi.shape[1] > 100:
+    if roi.shape[0]*roi.shape[1] > 50:
+        cv2.imwrite("temp_mp.png", roi)
         cv2.imshow("ROI", roi)

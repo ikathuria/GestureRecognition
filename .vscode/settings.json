@@ -1,3 +1,4 @@
 {
-    "jupyter.jupyterServerType": "local"
+    "jupyter.jupyterServerType": "local",
+    "python.pythonPath": "C:\\Users\\ikath\\AppData\\Local\\Programs\\Python\\Python38\\python.exe"
 }
