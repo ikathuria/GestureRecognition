@@ -3,7 +3,6 @@
 import os
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 import mediapipe as mp
 
@@ -16,7 +15,6 @@ from keras.models import load_model
 from image_processing import run_avg, segment
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
-
 
 # accumulated weight
 accumWeight = 0.5
@@ -40,11 +38,8 @@ def get_hands(image, x, y):
     miny = min(y)
     maxx = max(x)
     maxy = max(y)
-    
-    final_coords = (minx-25, miny-25, maxx+25, maxy+25)
-    # cv2.imshow("ROI", image[100:100, 100:100])
-
-    return final_coords
+    cv2.rectangle(image, (minx, miny), (maxx, maxy), (255, 0, 0), 2)
+    return image
 
 
 def load_weights():
@@ -79,17 +74,17 @@ def getPredictedClass(model):
     prediction = model.predict_on_batch(gray_image)
     predicted_class = np.argmax(prediction)
 
-    return labels[predicted_class].uper()
+    return labels[predicted_class].upper()
 
 
 print('switching on camera...')
 hands = mp_hands.Hands(max_num_hands=1,
-                       min_detection_confidence=0.4,
-                       min_tracking_confidence=0.4)
+                       min_detection_confidence=0.2,
+                       min_tracking_confidence=0.2)
 cap = cv2.VideoCapture(0)
 
 # region of interest (ROI) coordinates
-# top, right, bottom, left = 10, 310, 310, 610
+top, right, bottom, left = 10, 310, 310, 610
 
 num_frames = 0
 
@@ -102,9 +97,6 @@ while True:
     frame = cv2.flip(frame, 1)
     clone = frame.copy()
     height, width, channels = clone.shape
-    
-    # blank image
-    blank_image = np.zeros((height, width, channels), np.uint8)
 
     clone.flags.writeable = False
 
@@ -114,57 +106,67 @@ while True:
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_drawing.draw_landmarks(
-                blank_image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                clone, hand_landmarks, mp_hands.HAND_CONNECTIONS)
             landmarks = hand_landmarks.landmark
             coords_x = []
             coords_y = []
             for l in landmarks:
                 coords_x.append(int(l.x*width))
                 coords_y.append(int(l.y*height))
-        bounded_hands = get_hands(clone, coords_x, coords_y)
-        
-        cv2.imshow("Mediapipe hands", blank_image)
-        
-        # get the ROI
-        # right, left = bounded_hands[0][2], bounded_hands[0][0]
-        # top, bottom = bounded_hands[0][1], bounded_hands[0][3]
-        # roi = clone[top:bottom, right:left]
-        
-        # print(roi)
-        # print(type(roi))
+            # bounded_hands = get_hands(clone, coords_x, coords_y)
+            # cv2.imshow('Hands', bounded_hands)
 
-        # # convert the roi to grayscale and blur it
-        # gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-        # gray = cv2.GaussianBlur(gray, (7, 7), 0)
+    # get the ROI
+    roi = frame[top:bottom, right:left]
 
-        # contours, hierarchy = cv2.findContours(gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    # convert the roi to grayscale and blur it
+    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
-        # hull = []
-        # for i in range(len(contours)):
-        #     hull.append(cv2.convexHull(contours[i], False))
-        
-        # for i in range(len(contours)):
-        #     color_contours = (0, 255, 0) # green - color for contours
-        #     color = (255, 0, 0) # blue - color for convex hull
-        #     # draw ith contour
-        #     cv2.drawContours(gray, contours, i, color_contours, 1, 8, hierarchy)
-        #     # draw ith convex hull object
-        #     cv2.drawContours(gray, hull, i, color, 1, 8)
-        
-        # if type(roi) == type(np.array):
-        #     cv2.imwrite('temp_threshold.png', roi)
-
-        # cv2.rectangle(clone, (left, top), (right, bottom), (0, 0, 0), 2)
-
-        # predictedClass = getPredictedClass(model)
-
-        # cv2.putText(clone, str(predictedClass), (70, 45),
-        #             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
-        # cv2.imshow("Thesholded", bounded_hands[1])
+    # to get the background, keep looking till a threshold is reached
+    # so that our weighted average model gets calibrated
+    if num_frames < 30:
+        run_avg(gray, accumWeight)
+        if num_frames == 1:
+            print("\n[STATUS] please wait! calibrating...")
+        elif num_frames == 29:
+            print("[STATUS] calibration successfull...")
+            print("Press 'c' to recalibrate background")
     else:
-        cv2.putText(clone, "BLANK", (70, 45),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        # segment the hand region
+        hand = segment(gray)
+
+        if hand is not None:
+            (thresholded, segmented) = hand
+
+            contours, hierarchy = cv2.findContours(thresholded, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+            hull = []
+            for i in range(len(contours)):
+                hull.append(cv2.convexHull(contours[i], False))
+            
+            for i in range(len(contours)):
+                color_contours = (0, 255, 0) # green - color for contours
+                color = (255, 0, 0) # blue - color for convex hull
+                # draw ith contour
+                cv2.drawContours(thresholded, contours, i, color_contours, 1, 8, hierarchy)
+                # draw ith convex hull object
+                cv2.drawContours(thresholded, hull, i, color, 1, 8)
+
+            cv2.imwrite('temp_threshold.png', thresholded)
+
+            predictedClass = getPredictedClass(model)
+
+            cv2.putText(clone, str(predictedClass), (70, 45),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+            cv2.imshow("Thesholded", thresholded)
+
+        else:
+            cv2.putText(clone, "BLANK", (70, 45),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+    cv2.rectangle(clone, (left, top), (right, bottom), (0, 0, 0), 2)
 
     cv2.imshow("Gesture Recognition", clone)
 
@@ -174,6 +176,8 @@ while True:
     keypress = cv2.waitKey(1) & 0xFF
     if keypress == ord("q"):
         break
+    elif keypress == ord("c"):
+        num_frames = 0
 
 hands.close()
 cap.release()

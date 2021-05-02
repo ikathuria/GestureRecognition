@@ -1,6 +1,7 @@
 # temporary files
+temp.png
+temp_fgbgs.png
 temp_threshold.png
-temp_mp.png
 
 # User-specific files
 *.rsuser
