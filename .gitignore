@@ -1,8 +1,6 @@
 # temporary files
 temp_threshold.png
-temp_original.png
-temp_original.jpg
-temp.py
+temp_mp.png
 
 # User-specific files
 *.rsuser

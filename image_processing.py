@@ -88,7 +88,7 @@ def detectHands(image, draw_image):
             for l in landmarks:
                 coords_x.append(int(l.x * width))
                 coords_y.append(int(l.y * height))
-        # bounded_hands = getHands(image, coords_x, coords_y)
+        bounded_hands = getHands(image, coords_x, coords_y)
         return draw_image
     return None
 
@@ -109,10 +109,11 @@ def getHands(image, x, y):
     maxx = max(x)
     maxy = max(y)
 
-    final_coords = (minx - 25, miny - 25, maxx + 25, maxy + 25)
+    final_coords = (minx, miny, maxx, maxy)
 
-    right, left = final_coords[2], final_coords[0]
     top, bottom = final_coords[1], final_coords[3]
+    right, left = final_coords[2], final_coords[0]
     roi = image[top:bottom, right:left]
 
-    cv2.imshow("temp_fgbgs.png", roi)
+    if roi.shape[0]*roi.shape[1] > 100:
+        cv2.imshow("ROI", roi)

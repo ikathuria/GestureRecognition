@@ -27,7 +27,6 @@ while True:
 
     # removing mirror image
     frame = cv2.flip(frame, 1)
-
     height, width, channels = frame.shape
 
     # blank image
@@ -106,7 +105,7 @@ while True:
     cv2.putText(frame, "OK : " + str(count["ok"]), (10, 390),
                 cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
     
-    # detect mediapipe hands    
+    # detect mediapipe hands
     mediapipe_hands = detectHands(frame, blank_image)
     if type(mediapipe_hands) != type(None):
         cv2.imshow("Mediapipe Hands", mediapipe_hands)
